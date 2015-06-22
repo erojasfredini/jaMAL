@@ -93,6 +93,8 @@ user.UserAnimeList.BeginSyncAnimeList(r =>
 ## Installation
 Install the [jaMAL NuGet Package](https://www.nuget.org/packages/jaMAL/).
 
+Too lazy for nuget and to build it yourself? Ok, [here](http://1drv.ms/1LoPHyE) you got a direct download. But don't hate me if that isn’t the last version.
+
 ## Running Tests
 To test if everything is working run the tests in the jaMAL-APITest project. Please check that you have internet access before running the tests.
 
