@@ -14,7 +14,7 @@ Just Another MyAnimeList (jaMAL) is a portable C# library for .NET, Windows Phon
 * Sync with MyAnimeList when you want
 * Observable interface design
 
-## jaMAL "Hello World"
+## Hello World
 You can do everything with asynchronous calls to ensure great responsiveness in your application. But if you just don't care about that you can also do everything synchronously, or mixing asynchronous and synchronous calls. Just do it your way :)
 
 ### Synchronous
@@ -34,7 +34,7 @@ Anime FullmetalAlchemist = MediaDataBase.GetAnime("Fullmetal Alchemist");
 Console.WriteLine(FullmetalAlchemist.ToString());
 
 // add Fullmetal Alchemist to the user anime list
-AnimeEntry fmaEntry = new AnimeEntry(FullmetalAlchemist, 22/*episode*/, MediaEntry.EntryStatus.Currently, 9/*score*/);
+AnimeEntry fmaEntry = new AnimeEntry(FullmetalAlchemist, 22/*episode*/, MediaEntry.EntryStatus.Currently);
 user.UserAnimeList.AnimeEntries.Add(fmaEntry.Id, fmaEntry);
 
 // add, remove and update all the entries that you wish from the lists :)
@@ -78,7 +78,7 @@ while( !finishGettingAnime )
 { }
 
 // add Fullmetal Alchemist to the user anime list
-AnimeEntry fmaEntry = new AnimeEntry(FullmetalAlchemist, 22/*episode*/, MediaEntry.EntryStatus.Currently, 9/*score*/);
+AnimeEntry fmaEntry = new AnimeEntry(FullmetalAlchemist, 22/*episode*/, MediaEntry.EntryStatus.Currently);
 user.UserAnimeList.AnimeEntries.Add(fmaEntry.Id, fmaEntry);
 
 // add, remove or update the entries that you want from the lists :)
