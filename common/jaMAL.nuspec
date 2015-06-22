@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>jaMAL</id>
+        <version>0.8.0</version>
+        <title>jaMAL</title>
+        <authors>Emmanuel Rojas Fredini</authors>
+        <owners>Emmanuel Rojas Fredini</owners>
+        <licenseUrl>https://raw.githubusercontent.com/bobxiv/jaMAL/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/bobxiv/jaMAL</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Just Another MyAnimeList (jaMAL) is a portable C# library for .NET, Windows Phone, and Windows Store to communicate with MyAnimeList.net. It supports query anime and manga from MyAnimeList. Manipulating the anime and manga list of one or more users; adding, removing and updating of the entries. Features a full asynchronous interface, automatic cache of data and an observable design thought for data easy binding.</description>
+        <summary>Just Another MyAnimeList (jaMAL) is a portable C# library for various .NET platforms to communicate with MyAnimeList.net</summary>
+        <releaseNotes>Initial release. Features pending:
+* Manga List manipulation
+* Image cache serialization
+* User account data serialization
+* Other minor improvements</releaseNotes>
+        <copyright>Emmanuel Rojas Fredini</copyright>
+        <language>en-US</language>
+        <tags>myanimelist;rest;anime;manga;C#;portable;winrt</tags>
+        <dependencies>
+            <dependency id="PCLStorage" version="1.0.2" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\src\jaMAL-API\bin\Release\jaMAL.dll" target="lib\portable-net45+wp8+win8\jaMAL.dll" />
+    </files>
+</package>
