@@ -102,9 +102,10 @@ To build the project you need:
 * Windows ≥ 8 (because you cannot install WP8.1 in older versions)
 
 If you have the previous requirements then:
-1. Clone the repository
-2. Excecute getDependencies.bat to download dependencies nuget's packages
-3. Now you are good to go build the projects :)
+
+1.  Clone the repository
+2.  Excecute getDependencies.bat to download dependencies nuget's packages
+3.  Now you are good to go build the projects :)
 
 ## Running Tests
 To test if everything is working run the tests in the jaMAL-APITest project. Please check that you have internet access before running the tests.
