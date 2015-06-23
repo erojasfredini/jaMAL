@@ -99,7 +99,7 @@ Too lazy for nuget and to build it yourself? Ok, [here](http://1drv.ms/1LoPHyE) 
 To build the project you need:
 * Visual Studio ≥ 2013
 * Windows Phone ≥ 8.1 SDK
-* Windows ≥ 8 (because you cannot install WP8.1 older versions)
+* Windows ≥ 8 (because you cannot install WP8.1 in older versions)
 
 If you have the previous requirements then:
 1. Clone the repository
