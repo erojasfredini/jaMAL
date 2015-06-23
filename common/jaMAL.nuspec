@@ -18,12 +18,12 @@
 * Other minor improvements</releaseNotes>
         <copyright>Emmanuel Rojas Fredini</copyright>
         <language>en-US</language>
-        <tags>myanimelist;rest;anime;manga;C#;portable;winrt</tags>
+        <tags>myanimelist rest anime manga C# portable winrt</tags>
         <dependencies>
             <dependency id="PCLStorage" version="1.0.2" />
         </dependencies>
     </metadata>
     <files>
-        <file src="..\src\jaMAL-API\bin\Release\jaMAL.dll" target="lib\portable-net45+wp8+win8\jaMAL.dll" />
+        <file src="..\src\jaMAL\bin\Release\jaMAL.dll" target="lib\portable-net45+wp8+win8\jaMAL.dll" />
     </files>
 </package>

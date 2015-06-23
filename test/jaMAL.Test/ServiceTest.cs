@@ -22,7 +22,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using jaMAL;
 
-namespace jaMAL_APITest
+namespace jaMAL.Test
 {
     [TestClass]
     public class ServiceTest

@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="jaMAL">
+      <HintPath>..\..\src\jaMAL\bin\Debug\jaMAL.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -52,12 +55,6 @@
   <ItemGroup>
     <Compile Include="ServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\jaMAL-API\jaMAL-API.csproj">
-      <Project>{5eb241ae-0d02-4e1a-b7ea-94ada0940ad1}</Project>
-      <Name>jaMAL-API</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -1,0 +1,1 @@
+msbuild %~dp0build\build.proj /p:Configuration=Release /p:Platform="Any CPU" /t:Clean;BuildPackage

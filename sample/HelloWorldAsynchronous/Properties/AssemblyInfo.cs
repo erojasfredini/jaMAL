@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // La información general sobre un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos atributos para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("jaMAL-TestBench")]
-[assembly: AssemblyDescription("Test bench for jaMAL portable library")]
+[assembly: AssemblyTitle("HelloWorldSynchronous")]
+[assembly: AssemblyDescription("Synchronous Hello World sample of jaMAL portable library")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Emmanuel Rojas Fredini")]
-[assembly: AssemblyProduct("jaMAL-TestBench")]
+[assembly: AssemblyProduct("HelloWorldSynchronous")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // El siguiente GUID sirve como identificador de typelib si este proyecto se expone a COM
-[assembly: Guid("3b4fbd03-01ad-4c60-a04d-2e5f161752f1")]
+[assembly: Guid("f1f2c148-a9b7-4264-945b-94e28c355033")]
 
 // La información de versión de un ensamblado consta de los cuatro valores siguientes:
 //

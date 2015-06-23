@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="BuildPackage" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildProjectDirectory)\Build.tasks" />
+
+  <PropertyGroup>
+    <jaMALRootRoot>$(MSBuildProjectDirectory)\..</jaMALRootRoot>
+    <NugetExe>$(jaMALRootRoot)\.nuget\NuGet.exe</NugetExe>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <MajorVersion>0</MajorVersion>
+    <MinorVersion>8</MinorVersion>
+    <Build>0</Build>
+    <Revision>0</Revision>
+
+    
+    <AssemblyVersion>$(MajorVersion).$(MinorVersion).$(Build).$(Revision)</AssemblyVersion>
+    <AssemblyFileVersion>$(MajorVersion).$(MinorVersion).$(Build).$(Revision)</AssemblyFileVersion>
+    <PackageVersion>$(MajorVersion).$(MinorVersion).$(Build)</PackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <RegexTransform Include="$(jaMALRootRoot)\Common\CommonAssemblyInfo.cs">
+      <Find>AssemblyVersion\("\d+\.\d+\.\d+\.\d+"\)</Find>
+      <ReplaceWith>AssemblyVersion("$(AssemblyVersion)")</ReplaceWith>
+    </RegexTransform>
+    <RegexTransform Include="$(jaMALRootRoot)\Common\CommonAssemblyInfo.cs">
+      <Find>AssemblyFileVersion\("\d+\.\d+\.\d+\.\d+"\)</Find>
+      <ReplaceWith>AssemblyFileVersion("$(AssemblyFileVersion)")</ReplaceWith>
+    </RegexTransform>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <BuildDependsOn>RestorePackages;UpdateVersion</BuildDependsOn>
+  </PropertyGroup>
+
+  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)">
+    <MSBuild Projects="$(jaMALRootRoot)\jaMAL.sln" Targets="Build"
+             Properties="Configuration=$(Configuration);Platform=$(Platform)"/>
+  </Target>
+
+  <Target Name="Rebuild" DependsOnTargets="$(BuildDependsOn)">
+    <MSBuild Projects="$(jaMALRootRoot)\jaMAL.sln" Targets="Rebuild"
+             Properties="Configuration=$(Configuration);Platform=$(Platform)"/>
+  </Target>
+
+  <Target Name="Clean">
+    <MSBuild Projects="$(jaMALRootRoot)\jaMAL.sln" Targets="Clean"
+             Properties="Configuration=$(Configuration);Platform=$(Platform)"/>
+  </Target>
+
+  <ItemGroup>
+    <Solution Include="$(jaMALRootRoot)\*.sln" />
+  </ItemGroup>
+
+  <Target Name="RestorePackages">
+    <Exec Command="&quot;$(NuGetExe)&quot; restore &quot;%(Solution.Identity)&quot;" />
+  </Target>
+  
+  <Target Name="UpdateVersion">
+    <RegexTransform Items="@(RegexTransform)" />
+  </Target>
+
+  <Target Name="BuildPackage" DependsOnTargets="Build">
+    <MakeDir Directories="$(jaMALRootRoot)\output" Condition="!Exists('$(jaMALRootRoot)\output')" />
+    <Exec Command="&quot;$(NuGetExe)&quot; pack $(jaMALRootRoot)\common\jaMAL.nuspec -NoPackageAnalysis -o &quot;$(jaMALRootRoot)\output&quot; -Version $(PackageVersion)" />
+  </Target>
+  
+</Project>

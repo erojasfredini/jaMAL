@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // La información general de un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambiar estos valores de atributo para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("jaMAL-Test")]
+[assembly: AssemblyTitle("jaMAL.Test")]
 [assembly: AssemblyDescription("Tests for jaMAL portable library")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Emmanuel Rojas Fredini")]
-[assembly: AssemblyProduct("jaMAL-Test")]
+[assembly: AssemblyProduct("jaMAL.Test")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("en")]

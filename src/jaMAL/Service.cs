@@ -850,7 +850,7 @@ namespace jaMAL
             userId = id;
             return couldVerify;
         }
-
+        
         /// <summary>
         /// Async verifies if the user account name and password are valid
         /// </summary>
@@ -911,7 +911,7 @@ namespace jaMAL
                         _parseUserVerificationXML(Response, out id, out name);
 
                         // the name of the account verified and the one that we have must ve the same!
-                        Debug.Assert(name == account.UserName);
+                        Debug.Assert(name == account.UserName, "Verified name is not equal to the desired username");
 
                         result = new VerifyCredentialsAsyncResult(account, true, id);
                         data.ResultCallback(result);
