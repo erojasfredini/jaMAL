@@ -1,17 +1,44 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E1803F23-7DBC-41F1-8A0A-3C93D66DCC69}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E1803F23-7DBC-41F1-8A0A-3C93D66DCC69}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{60038418-A945-4610-9960-A57F32DE3277}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{60038418-A945-4610-9960-A57F32DE3277}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jaMAL-API", "src\jaMAL-API\jaMAL-API.csproj", "{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jaMAL.Test", "test\jaMAL.Test\jaMAL.Test.csproj", "{4F57EF2F-C54A-4D7E-B56B-258EBD8DF67C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1} = {5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jaMAL-APITest", "test\jaMAL-APITest\jaMAL-APITest.csproj", "{4F57EF2F-C54A-4D7E-B56B-258EBD8DF67C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{79C0DC6B-E555-4907-A7FE-621AA48A1A62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jaMAL-APITestBench", "test\jaMAL-APITestBench\jaMAL-APITestBench.csproj", "{5BBB41AF-397D-4032-8EAB-E187317660B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBench", "sample\TestBench\TestBench.csproj", "{5BBB41AF-397D-4032-8EAB-E187317660B4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1} = {5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jaMAL", "src\jaMAL\jaMAL.csproj", "{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldSynchronous", "sample\HelloWorldSynchronous\HelloWorldSynchronous.csproj", "{38BCBAAD-C293-4589-9FC1-590E3D65474E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1} = {5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldAsynchronous", "sample\HelloWorldAsynchronous\HelloWorldAsynchronous.csproj", "{359C7292-68D8-4031-8427-881CD9CC8BE9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1} = {5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{0D62A562-E8B8-4C5C-BF5D-21521362F793}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.proj = build\build.proj
+		build\Build.tasks = build\Build.tasks
+		build\buildSimple.proj = build\buildSimple.proj
+		common\CommonAssemblyInfo.cs = common\CommonAssemblyInfo.cs
+		common\jaMAL.nuspec = common\jaMAL.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +46,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4F57EF2F-C54A-4D7E-B56B-258EBD8DF67C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4F57EF2F-C54A-4D7E-B56B-258EBD8DF67C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F57EF2F-C54A-4D7E-B56B-258EBD8DF67C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -31,13 +54,27 @@ Global
 		{5BBB41AF-397D-4032-8EAB-E187317660B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BBB41AF-397D-4032-8EAB-E187317660B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BBB41AF-397D-4032-8EAB-E187317660B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38BCBAAD-C293-4589-9FC1-590E3D65474E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38BCBAAD-C293-4589-9FC1-590E3D65474E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38BCBAAD-C293-4589-9FC1-590E3D65474E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38BCBAAD-C293-4589-9FC1-590E3D65474E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{359C7292-68D8-4031-8427-881CD9CC8BE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{359C7292-68D8-4031-8427-881CD9CC8BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{359C7292-68D8-4031-8427-881CD9CC8BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{359C7292-68D8-4031-8427-881CD9CC8BE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1} = {60038418-A945-4610-9960-A57F32DE3277}
 		{4F57EF2F-C54A-4D7E-B56B-258EBD8DF67C} = {E1803F23-7DBC-41F1-8A0A-3C93D66DCC69}
-		{5BBB41AF-397D-4032-8EAB-E187317660B4} = {E1803F23-7DBC-41F1-8A0A-3C93D66DCC69}
+		{5EB241AE-0D02-4E1A-B7EA-94ADA0940AD1} = {60038418-A945-4610-9960-A57F32DE3277}
+		{5BBB41AF-397D-4032-8EAB-E187317660B4} = {79C0DC6B-E555-4907-A7FE-621AA48A1A62}
+		{38BCBAAD-C293-4589-9FC1-590E3D65474E} = {79C0DC6B-E555-4907-A7FE-621AA48A1A62}
+		{359C7292-68D8-4031-8427-881CD9CC8BE9} = {79C0DC6B-E555-4907-A7FE-621AA48A1A62}
 	EndGlobalSection
 EndGlobal
