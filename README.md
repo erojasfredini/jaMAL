@@ -95,6 +95,17 @@ Install the [jaMAL NuGet Package](https://www.nuget.org/packages/jaMAL/).
 
 Too lazy for nuget and to build it yourself? Ok, [here](http://1drv.ms/1LoPHyE) you got a direct download. But don't hate me if that isn’t the last version.
 
+## How to build
+To build the project you need:
+* Visual Studio ≥ 2013
+* Windows Phone ≥ 8.1 SDK
+* Windows ≥ 8 (because you cannot install WP8.1 older versions)
+
+If you have the previous requirements then:
+1. Clone the repository
+2. Excecute getDependencies.bat to download dependencies nuget's packages
+3. Now you are good to go build the projects :)
+
 ## Running Tests
 To test if everything is working run the tests in the jaMAL-APITest project. Please check that you have internet access before running the tests.
 
