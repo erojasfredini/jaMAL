@@ -4,7 +4,7 @@ Just Another MyAnimeList (jaMAL) is a portable C# library for .NET, Windows Phon
 ### Supported Platforms
 
 * .Net (≥ 4.5)
-* Windows Phone (≥ 8)
+* Windows Phone (≥ 8.1)
 * Windows Store (≥ 8)
 
 ### Main features
