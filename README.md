@@ -10,7 +10,7 @@ Just Another MyAnimeList (jaMAL) is a portable C# library for .NET, Windows Phon
 ### Main features
 
 * Work asynchronously or synchronously
-* Automatic cache of querys, anime and manga lists and images
+* Automatic cache of querys, anime/manga lists and images
 * Sync with MyAnimeList when you want
 * Observable interface design
 
