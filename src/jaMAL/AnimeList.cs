@@ -109,14 +109,22 @@ namespace jaMAL
         public override string ToString()
         {
             string animeList = base.ToString();
-            animeList += "\n";
+            StringBuilder sb = new StringBuilder();
+            sb.Append(animeList);
+            sb.AppendLine("Watching: " + Watching);
+            sb.AppendLine("Completed: " + Completed);
+            sb.AppendLine("OnHold: " + OnHold);
+            sb.AppendLine("Dropped: " + Dropped);
+            sb.AppendLine("Plan To Consume: " + PlanToConsume);
+            sb.AppendLine("Days Spent Consuming: " + DaysSpentConsuming);
+            sb.AppendLine();
             foreach (AnimeEntry e in AnimeEntries.Values)
             {
-                animeList += "Entry:\n";
-                animeList += e.ToString();
+                sb.AppendLine("Entry: " + e.Anime.Name);
+                sb.Append(e.ToString());
             }
 
-            return animeList;
+            return sb.ToString();
         }
 
         #endregion
@@ -205,25 +213,6 @@ namespace jaMAL
         /// <param name="newItem">The added anime entry</param>
         private void _addItem(AnimeEntry newItem)
         {
-            /*
-            switch (newItem.Status)
-            {
-                case MediaEntry.EntryStatus.Completed:
-                    ++_completed;
-                    break;
-                case MediaEntry.EntryStatus.Currently:
-                    ++_watching;
-                    break;
-                case MediaEntry.EntryStatus.Dropped:
-                    ++_dropped;
-                    break;
-                case MediaEntry.EntryStatus.OnHold:
-                    ++_onHold;
-                    break;
-                case MediaEntry.EntryStatus.PlanToWatch:
-                    ++_planToConsume;
-                    break;
-            }*/
             // Add listener for each item on PropertyChanged event
             newItem.PropertyChanged += this._onAnimeEntryChange;
         }
@@ -234,26 +223,6 @@ namespace jaMAL
         /// <param name="oldItem">The removed anime entry</param>
         private void _removeItem(AnimeEntry oldItem)
         {
-            /*
-            switch (oldItem.Status)
-            {
-                case MediaEntry.EntryStatus.Completed:
-                    --_completed;
-                    break;
-                case MediaEntry.EntryStatus.Currently:
-                    --_watching;
-                    break;
-                case MediaEntry.EntryStatus.Dropped:
-                    --_dropped;
-                    break;
-                case MediaEntry.EntryStatus.OnHold:
-                    --_onHold;
-                    break;
-                case MediaEntry.EntryStatus.PlanToWatch:
-                    --_planToConsume;
-                    break;
-            }
-            */
             // Remove listener for each item on PropertyChanged event
             oldItem.PropertyChanged -= this._onAnimeEntryChange;
         }
@@ -270,11 +239,7 @@ namespace jaMAL
                 // if the status was change the values of the list changed and need to be refreshed
                 case "Status":
                 {
-                    RaisePropertyChanged("Watching");
-                    RaisePropertyChanged("Completed");
-                    RaisePropertyChanged("OnHold");
-                    RaisePropertyChanged("Dropped");
-                    RaisePropertyChanged("PlanToConsume");
+                    _refreshListProperties();
                 }
                 break;
             }
@@ -470,7 +435,7 @@ namespace jaMAL
                         _refreshCompleted = getlistResult.Completed;
                         _refreshOnHold = getlistResult.OnHold;
                         _refreshDropped = getlistResult.Dropped;
-                        _planToConsume = getlistResult.PlanToConsume;
+                        _refreshPlanToConsume = getlistResult.PlanToConsume;
                         _daysSpentConsuming = getlistResult.DaysSpentConsuming;
                         _lastServiceAnimeEntries.Clear();
                         _refreshing = false;
@@ -518,7 +483,7 @@ namespace jaMAL
                 _refreshCompleted = completed;
                 _refreshOnHold = onHold;
                 _refreshDropped = dropped;
-                _planToConsume = planToConsume;
+                _refreshPlanToConsume = planToConsume;
                 _daysSpentConsuming = daysSpentConsuming;
                 _lastServiceAnimeEntries.Clear();
                 _refreshing = false;

@@ -42,7 +42,9 @@ namespace jaMAL
             }
         }
 
-        protected float _daysSpentConsuming;
+        /// <summary>
+        /// Amount of days consuming the media
+        /// </summary>
         public float DaysSpentConsuming
         {
             get
@@ -78,12 +80,6 @@ namespace jaMAL
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("UserID: " + _accountOwner.UserID);
             sb.AppendLine("UserName: " + _accountOwner.UserName);
-            sb.AppendLine("Watching: " + _refreshWatching);
-            sb.AppendLine("Completed: " + _refreshCompleted);
-            sb.AppendLine("OnHold: " + _refreshOnHold);
-            sb.AppendLine("Dropped: " + _refreshDropped);
-            sb.AppendLine("Plan To Consume: " + _planToConsume);
-            sb.AppendLine("Days Spent Consuming: " + _daysSpentConsuming);
             return sb.ToString();
         }
 
@@ -111,6 +107,11 @@ namespace jaMAL
         protected readonly Account _accountOwner;
 
         /// <summary>
+        /// Days consuming the media
+        /// </summary>
+        protected float _daysSpentConsuming;
+
+        /// <summary>
         /// The watching entries at last list refresh (only at refresh, not maintain)
         /// </summary>
         protected uint _refreshWatching;
@@ -133,7 +134,7 @@ namespace jaMAL
         /// <summary>
         /// The planed to consume entries at last list refresh (only at refresh, not maintain)
         /// </summary>
-        protected uint _planToConsume;
+        protected uint _refreshPlanToConsume;
 
         /// <summary>
         /// True if actually synchronizing
