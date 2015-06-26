@@ -1,5 +1,5 @@
 # jaMAL
-Just Another MyAnimeList (jaMAL) is a portable C# library for .NET, Windows Phone, and Windows Store to communicate with [MyAnimeList.net](http://myanimelist.net/). It supports query anime and manga from MyAnimeList. Manipulating the anime and manga list of one or more users; adding, removing and updating of the entries. Features a full asynchronous interface, automatic cache of data and an observable design thought for data easy binding.
+Just Another MyAnimeList (jaMAL) is a portable C# library for .NET, Windows Phone, and Windows Store to communicate with [MyAnimeList.net](http://myanimelist.net/) using the [MAL official API](http://myanimelist.net/modules.php?go=api). It supports query anime and manga from MyAnimeList. Manipulating the anime and manga list of one or more users; adding, removing and updating of the entries. Features a full asynchronous interface, automatic cache of data and an observable design thought for data easy binding.
 
 ### Supported Platforms
 
