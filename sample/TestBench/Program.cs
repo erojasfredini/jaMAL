@@ -37,8 +37,9 @@ namespace TestBench
             Account user = null;
             try
             {
+                //Service.UserAgent = "jaMAL";
                 user = new Account("jaMALTestAccount", "jaMALTestAccount");
-                Service.UserAccount = user;
+                MediaDataBase.UserAccount = user;
 
                 Console.WriteLine("Verifying account...");
                 if (user.VerifyAccount())
@@ -285,7 +286,7 @@ namespace TestBench
             {
                 Console.WriteLine("Service.BeginGetUserList | AnimeList");
                 bool finishGetUserAnimeListCallback = false;
-                IAsyncResult res = Service.BeginGetUserList(MediaType.Anime,
+                IAsyncResult res = Service.BeginGetUserList(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, MediaType.Anime,
                     ar =>
                     {
                         Console.WriteLine((ar as Service.SearchUserAnimeListAsyncResult).AnimeList.ToString());
@@ -304,7 +305,7 @@ namespace TestBench
             {
                 Console.WriteLine("Service.BeginDelete | Anime");
                 bool finishDeleteCallback = false;
-                IAsyncResult res = Service.BeginDelete(FMAentry.Anime.Id, MediaType.Anime,
+                IAsyncResult res = Service.BeginDelete(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, FMAentry.Anime.Id, MediaType.Anime,
                     ar =>
                     {
                         finishDeleteCallback = true;
@@ -322,13 +323,13 @@ namespace TestBench
             // test Service.Search Anime
             {
                 Console.WriteLine("Service.Search | Anime");
-                List<Media> media = Service.Search("Full Metal Alchemist", MediaType.Anime);
+                List<Media> media = Service.Search(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, "Full Metal Alchemist", MediaType.Anime);
 
                 foreach (Media m in media)
                 {
                     Console.WriteLine((m as Anime).ToString());
 
-                    bool finishDownloadingImage = false;
+                    //bool finishDownloadingImage = false;
                     byte[] image = ImageDataBase.GetImage(m);
 
                     using (System.IO.FileStream file = new System.IO.FileStream("C:\\Users\\Bob\\Documents\\Proyectos\\jaMAL\\jaMAL-APITestBench\\fma.jpg", System.IO.FileMode.Create))
@@ -347,7 +348,7 @@ namespace TestBench
             // test Service.Search Manga
             {
                 Console.WriteLine("Service.Search | Manga");
-                List<Media> media = Service.Search("Full Metal Alchemist", MediaType.Manga);
+                List<Media> media = Service.Search(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, "Full Metal Alchemist", MediaType.Manga);
 
                 foreach (Media m in media)
                     Console.WriteLine(m.Name);
@@ -362,7 +363,7 @@ namespace TestBench
                 Console.WriteLine("Service.BeginSearch | Anime");
                 Service.SearchAnimeAsyncResult u = null;
                 bool finishSearchCallback = false;
-                IAsyncResult res = Service.BeginSearch("Full Metal Alchemist", MediaType.Anime,
+                IAsyncResult res = Service.BeginSearch(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, "Full Metal Alchemist", MediaType.Anime,
                     ar =>
                     {
                         u = (Service.SearchAnimeAsyncResult)ar;

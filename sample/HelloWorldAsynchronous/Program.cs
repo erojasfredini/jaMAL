@@ -12,7 +12,7 @@ namespace HelloWorldAsynchronous
         static void Main(string[] args)
         {
             Account user = new Account("jaMALTestAccount", "jaMALTestAccount");
-            Service.UserAccount = user;
+            MediaDataBase.UserAccount = user;
             if (!user.VerifyAccount())
                 throw new Exception("Verification failed :'(");
 

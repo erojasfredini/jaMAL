@@ -30,9 +30,9 @@ namespace jaMAL.Test
         [TestMethod]
         public void SearchTest_Anime()
         {
-            Service.UserAccount = new Account("jaMALTestAccount", "jaMALTestAccount");
+            Account userAccount = new Account("jaMALTestAccount", "jaMALTestAccount");
 
-            List<Media> media = Service.Search("Full Metal Alchemist", MediaType.Anime);
+            List<Media> media = Service.Search(userAccount.UserName, userAccount.Password, "Full Metal Alchemist", MediaType.Anime);
 
             // check that the answer have what we want
             Assert.IsTrue(media.Find(m => m.Name == "Fullmetal Alchemist") != null);
@@ -41,9 +41,9 @@ namespace jaMAL.Test
         [TestMethod]
         public void SearchTest_Manga()
         {
-            Service.UserAccount = new Account("jaMALTestAccount", "jaMALTestAccount");
+            Account userAccount = new Account("jaMALTestAccount", "jaMALTestAccount");
 
-            List<Media> media = Service.Search("Full Metal Alchemist", MediaType.Manga);
+            List<Media> media = Service.Search(userAccount.UserName, userAccount.Password, "Full Metal Alchemist", MediaType.Manga);
 
             // check that the answer have what we want
             Assert.IsTrue(media.Find(m => m.Name == "Full Metal Alchemist: Prototype") != null);
@@ -52,11 +52,11 @@ namespace jaMAL.Test
         [TestMethod]
         public void BeginSearchTest_Anime()
         {
-            Service.UserAccount = new Account("jaMALTestAccount", "jaMALTestAccount");
+            Account userAccount = new Account("jaMALTestAccount", "jaMALTestAccount");
 
             Service.SearchAnimeAsyncResult animQuery = null;
             bool finishSearchCallback = false;
-            IAsyncResult res = Service.BeginSearch("Full Metal Alchemist", MediaType.Anime,
+            IAsyncResult res = Service.BeginSearch(userAccount.UserName, userAccount.Password, "Full Metal Alchemist", MediaType.Anime,
                 ar =>
                 {
                     animQuery = (Service.SearchAnimeAsyncResult)ar;

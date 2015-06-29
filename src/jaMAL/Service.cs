@@ -25,17 +25,75 @@ using System.IO;
 using System.Xml;
 using System.Threading;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace jaMAL
 {
     /// <summary>
     /// Class for accessing myanimelist.net. Methods are thread-safe. Properties are not.
     /// </summary>
-    public class Service
+    public static class Service
     {
-        #region Properties
+        #region Public Properties
 
-        public static Account UserAccount;
+        /// <summary>
+        /// The user agent to use in the http requests. If null then not using user-agent
+        /// </summary>
+        public static string UserAgent = null;
+
+        #endregion
+
+        #region Private Properties
+
+        /// <summary>
+        /// Service to retrieve a user animelist or mangalist
+        /// </summary>
+        private readonly static string _getMediaListURL = "http://myanimelist.net/malappinfo.php?u={0}&type={1}";
+
+        /// <summary>
+        /// Service to verify an account
+        /// </summary>
+        private readonly static string _verifyCredentialsURL = "http://myanimelist.net/api/account/verify_credentials.xml";
+
+        /// <summary>
+        /// Service to delete an anime entry from the animelist
+        /// </summary>
+        private readonly static string _deleteAnimeURL = "http://myanimelist.net/api/animelist/delete/{0}.xml";
+
+        /// <summary>
+        /// Service to update an anime entry from the animelist
+        /// </summary>
+        private readonly static string _updateAnimeURL = "http://myanimelist.net/api/animelist/update/{0}.xml";
+
+        /// <summary>
+        /// Service to add an anime entry to the animelist
+        /// </summary>
+        private readonly static string _addAnimeURL = "http://myanimelist.net/api/animelist/add/{0}.xml";
+
+        /// <summary>
+        /// Service to delete a manga entry from the mangalist
+        /// </summary>
+        private readonly static string _deleteMangaURL = "http://myanimelist.net/api/mangalist/delete/{0}.xml";
+
+        /// <summary>
+        /// Service to update a manga entry from the mangalist
+        /// </summary>
+        private readonly static string _updateMangaURL = "http://myanimelist.net/api/mangalist/update/{0}.xml";
+
+        /// <summary>
+        /// Service to add a manga entry to the mangalist
+        /// </summary>
+        private readonly static string _addMangaURL = "http://myanimelist.net/api/mangalist/add/{0}.xml";
+
+        /// <summary>
+        /// Service to query for an anime info
+        /// </summary>
+        private readonly static string _searchAnimeURL = "http://myanimelist.net/api/anime/search.xml?q={0}";
+
+        /// <summary>
+        /// Service to query for a manga info
+        /// </summary>
+        private readonly static string _searchMangaURL = "http://myanimelist.net/api/manga/search.xml?q={0}";
 
         #endregion
 
@@ -864,7 +922,7 @@ namespace jaMAL
             try
             {
                 // query CURL
-                string webRequestURL = "http://myanimelist.net/api/account/verify_credentials.xml";
+                string webRequestURL = _verifyCredentialsURL;
 
                 HttpWebRequest webRequest = WebRequest.Create(webRequestURL) as HttpWebRequest;
                 webRequest.Method = "GET";
@@ -911,7 +969,7 @@ namespace jaMAL
                         _parseUserVerificationXML(Response, out id, out name);
 
                         // the name of the account verified and the one that we have must ve the same!
-                        Debug.Assert(name == account.UserName, "Verified name is not equal to the desired username");
+                        Debug.Assert(name == account.UserName, "Verified name (" + name + ") is not equal to the desired username (" + account.UserName+")");
 
                         result = new VerifyCredentialsAsyncResult(account, true, id);
                         data.ResultCallback(result);
@@ -947,21 +1005,25 @@ namespace jaMAL
         /// <summary>
         /// Sync get user anime/manga list
         /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
         /// <param name="type">If gets anime or manga list</param>
         /// <param name="timeout">The miliseconds to wait for an answer from the service (-1 to wait forever). Default 5 seconds</param>
         ///<exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
-        public static List<MediaEntry> GetUserList(MediaType type, int timeout = 5000)
+        public static List<MediaEntry> GetUserList(string username, string password, MediaType type, int timeout = 5000)
         {
             string userName;
             uint userID, watching, completed, onHold, dropped, planToConsume;
             float daysSpentConsuming;
             // frack the list info! :P
-            return GetUserList(type, out userID, out userName, out watching, out completed, out onHold, out dropped, out planToConsume, out daysSpentConsuming, timeout);
+            return GetUserList(username, password, type, out userID, out userName, out watching, out completed, out onHold, out dropped, out planToConsume, out daysSpentConsuming, timeout);
         }
 
         /// <summary>
         /// Sync get user anime/manga list
         /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
         /// <param name="type">If gets anime or manga list</param>
         /// <param name="userID">The id of the account owner of the list</param>
         /// <param name="userName">The name of the account owner of the list</param>
@@ -973,7 +1035,7 @@ namespace jaMAL
         /// <param name="daysSpentConsuming">The number of days to consume all the media</param>
         /// <param name="timeout">The miliseconds to wait for an answer from the service (-1 to wait forever). Default 5 seconds</param>
         ///<exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
-        public static List<MediaEntry> GetUserList(MediaType type, out uint userID, out string userName, out uint watching, out uint completed, out uint onHold, out uint dropped, out uint planToConsume, out float daysSpentConsuming, int timeout = 5000)
+        public static List<MediaEntry> GetUserList(string username, string password, MediaType type, out uint userID, out string userName, out uint watching, out uint completed, out uint onHold, out uint dropped, out uint planToConsume, out float daysSpentConsuming, int timeout = 5000)
         {
             string _userName;
             uint _userID, _watching, _completed, _onHold, _dropped, _planToConsume;
@@ -990,7 +1052,7 @@ namespace jaMAL
             try
             {
                 bool finishGetListCallback = false;
-                IAsyncResult res = BeginGetUserList(type,
+                IAsyncResult res = BeginGetUserList(username, password, type,
                     result =>
                     {
                         switch (type)
@@ -1044,7 +1106,23 @@ namespace jaMAL
             return list;
         }
 
-        public static IAsyncResult BeginGetUserList(MediaType type, AsyncCallback resultCallback)
+        /// <summary>
+        /// Async get user anime/manga list
+        /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
+        /// <param name="type">If gets anime or manga list</param>
+        /// <param name="userID">The id of the account owner of the list</param>
+        /// <param name="userName">The name of the account owner of the list</param>
+        /// <param name="watching">The number of anime/manga currently consuming</param>
+        /// <param name="completed">The number of anime/manga completed</param>
+        /// <param name="onHold">The number of anime/manga on hold</param>
+        /// <param name="dropped">The number of anime/manga dropped</param>
+        /// <param name="planToConsume">The number of anime/manga planed to consume</param>
+        /// <param name="daysSpentConsuming">The number of days to consume all the media</param>
+        /// <param name="timeout">The miliseconds to wait for an answer from the service (-1 to wait forever). Default 5 seconds</param>
+        ///<exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
+        public static IAsyncResult BeginGetUserList(string username, string password, MediaType type, AsyncCallback resultCallback)
         {
             IAsyncResult res = null;
             try
@@ -1054,18 +1132,21 @@ namespace jaMAL
                 switch (type)
                 {
                     case MediaType.Anime:
-                        webRequestURL = string.Format("http://myanimelist.net/malappinfo.php?u={0}&type=anime", UserAccount.UserName);
+                        webRequestURL = string.Format(_getMediaListURL, username, "anime");
                         break;
 
                     case MediaType.Manga:
-                        webRequestURL = string.Format("http://myanimelist.net/malappinfo.php?u={0}&type=manga", UserAccount.UserName);
+                        webRequestURL = string.Format(_getMediaListURL, username, "manga");
                         break;
                 }
 
                 HttpWebRequest webRequest = WebRequest.Create(webRequestURL) as HttpWebRequest;
                 webRequest.Method = "GET";
-                webRequest.Credentials = new NetworkCredential(UserAccount.UserName, UserAccount.Password);
+                webRequest.Credentials = new NetworkCredential(username, password);
                 webRequest.ContentType = "application/x-www-form-urlencoded";
+                // try to set user agent in this platform - if cannot set it does nothing
+                // NOTE: This won't work in all platforms but is the only way in portable librarys :(
+                _trySetUserAgent(ref webRequest, Service.UserAgent);
 
                 _asyncQueryData data = new _asyncQueryData();
                 data.ResultCallback = resultCallback;
@@ -1146,17 +1227,19 @@ namespace jaMAL
         /// <summary>
         /// Sync delete anime/manga
         /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
         /// <param name="id">The id of the anime/manga</param>
         /// <param name="type">If the query is about anime or manga</param>
         /// <param name="timeout">The miliseconds to wait for an answer from the service (-1 to wait forever). Default 5 seconds</param>
         ///<exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
-        public static bool Delete(uint id, MediaType type, int timeout = 5000)
+        public static bool Delete(string username, string password, uint id, MediaType type, int timeout = 5000)
         {
             bool couldDelete = false;
             try
             {
                 bool finishDeleteCallback = false;
-                IAsyncResult res = BeginDelete(id, type,
+                IAsyncResult res = BeginDelete(username, password, id, type,
                     ar =>
                     {
                         switch (type)
@@ -1191,10 +1274,12 @@ namespace jaMAL
         /// <summary>
         /// Async delete anime/manga
         /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
         /// <param name="id">The id of the anime/manga</param>
         /// <param name="type">If the query is about anime or manga</param>
         ///<exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
-        public static IAsyncResult BeginDelete(uint id, MediaType type, AsyncCallback resultCallback)
+        public static IAsyncResult BeginDelete(string username, string password, uint id, MediaType type, AsyncCallback resultCallback)
         {
             IAsyncResult res = null;
             try
@@ -1205,17 +1290,17 @@ namespace jaMAL
                 switch (type)
                 {
                     case MediaType.Anime:
-                        webRequestURL = string.Format("http://myanimelist.net/api/animelist/delete/{0}.xml", id);
+                        webRequestURL = string.Format(_deleteAnimeURL, id);
                         break;
 
                     case MediaType.Manga:
-                        webRequestURL = string.Format("http://myanimelist.net/api/mangalist/delete/{0}.xml", id);
+                        webRequestURL = string.Format(_deleteMangaURL, id);
                         break;
                 }
 
                 HttpWebRequest webRequest = WebRequest.Create(webRequestURL) as HttpWebRequest;
                 webRequest.Method = "POST";
-                webRequest.Credentials = new NetworkCredential(UserAccount.UserName, UserAccount.Password);
+                webRequest.Credentials = new NetworkCredential(username, password);
                 webRequest.ContentType = "application/x-www-form-urlencoded";
 
                 _asyncQueryData data = new _asyncQueryData();
@@ -1284,17 +1369,19 @@ namespace jaMAL
         /// <summary>
         /// Sync add anime/manga
         /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
         /// <param name="entry">The anime/manga entry to add</param>
         /// <param name="type">If the query is about anime or manga</param>
         /// <param name="timeout">The miliseconds to wait for an answer from the service (-1 to wait forever). Default 5 seconds</param>
         ///<exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
-        public static bool Add(MediaEntry entry, MediaType type, int timeout = 5000)
+        public static bool Add(string username, string password, MediaEntry entry, MediaType type, int timeout = 5000)
         {
             bool couldAdd = false;
             try
             {
                 bool finishAddCallback = false;
-                IAsyncResult res = BeginAdd(entry, type,
+                IAsyncResult res = BeginAdd(username, password, entry, type,
                     ar =>
                     {
                         switch(type)
@@ -1329,16 +1416,18 @@ namespace jaMAL
         /// <summary>
         /// Sync update anime/manga
         /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
         /// <param name="entry">The anime/manga entry to update</param>
         /// <param name="type">If the query is about anime or manga</param>
         ///<exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
-        public static bool Update(MediaEntry entry, MediaType type, int timeout = 5000)
+        public static bool Update(string username, string password, MediaEntry entry, MediaType type, int timeout = 5000)
         {
             bool couldUpdate = false;
             try
             {
                 bool finishUpdateCallback = false;
-                IAsyncResult res = BeginAdd(entry, type,
+                IAsyncResult res = BeginAdd(username, password, entry, type,
                     ar =>
                     {
                         switch (type)
@@ -1373,10 +1462,12 @@ namespace jaMAL
         /// <summary>
         /// Async update anime/manga
         /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
         /// <param name="entry">The anime/manga entry to update</param>
         /// <param name="type">If the query is about anime or manga</param>
         ///<exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
-        public static IAsyncResult BeginUpdate(MediaEntry entry, MediaType type, AsyncCallback resultCallback)
+        public static IAsyncResult BeginUpdate(string username, string password, MediaEntry entry, MediaType type, AsyncCallback resultCallback)
         {
             IAsyncResult res = null;
             try
@@ -1387,17 +1478,17 @@ namespace jaMAL
                 switch (type)
                 {
                     case MediaType.Anime:
-                        webRequestURL = string.Format("http://myanimelist.net/api/animelist/update/{0}.xml", (entry as AnimeEntry).Anime.Id);
+                        webRequestURL = string.Format(_updateAnimeURL, (entry as AnimeEntry).Anime.Id);
                         break;
 
                     case MediaType.Manga:
-                        webRequestURL = string.Format("http://myanimelist.net/api/mangalist/update/{0}.xml", (entry as MangaEntry).Manga.Id);
+                        webRequestURL = string.Format(_updateMangaURL, (entry as MangaEntry).Manga.Id);
                         break;
                 }
 
                 HttpWebRequest webRequest = WebRequest.Create(webRequestURL) as HttpWebRequest;
                 webRequest.Method = "POST";
-                webRequest.Credentials = new NetworkCredential(UserAccount.UserName, UserAccount.Password);
+                webRequest.Credentials = new NetworkCredential(username, password);
                 webRequest.ContentType = "application/x-www-form-urlencoded";
 
                 _asyncQueryData data = new _asyncQueryData();
@@ -1446,10 +1537,12 @@ namespace jaMAL
         /// <summary>
         /// Async add anime/manga
         /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
         /// <param name="entry">The anime/manga entry to add</param>
         /// <param name="type">If the query is about anime or manga</param>
         ///<exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
-        public static IAsyncResult BeginAdd(MediaEntry entry, MediaType type, AsyncCallback resultCallback)
+        public static IAsyncResult BeginAdd(string username, string password, MediaEntry entry, MediaType type, AsyncCallback resultCallback)
         {
             IAsyncResult res = null;
             try
@@ -1460,17 +1553,17 @@ namespace jaMAL
                 switch (type)
                 {
                     case MediaType.Anime:
-                        webRequestURL = string.Format("http://myanimelist.net/api/animelist/add/{0}.xml", (entry as AnimeEntry).Anime.Id);
+                        webRequestURL = string.Format(_addAnimeURL, entry.Id);
                         break;
 
                     case MediaType.Manga:
-                        webRequestURL = string.Format("http://myanimelist.net/api/mangalist/add/{0}.xml", (entry as MangaEntry).Manga.Id);
+                        webRequestURL = string.Format(_addMangaURL, entry.Id);
                         break;
                 }
 
                 HttpWebRequest webRequest = WebRequest.Create(webRequestURL) as HttpWebRequest;
                 webRequest.Method = "POST";
-                webRequest.Credentials = new NetworkCredential(UserAccount.UserName, UserAccount.Password);
+                webRequest.Credentials = new NetworkCredential(username, password);
                 webRequest.ContentType = "application/x-www-form-urlencoded";
 
                 _asyncQueryData data = new _asyncQueryData();
@@ -1565,12 +1658,14 @@ namespace jaMAL
         /// <summary>
         /// Sync search query for anime/manga. The result contains the list of anime/manga entries
         /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
         /// <param name="searchName">The name of the anime/manga</param>
         /// <param name="type">If the query is about anime or manga</param>
         /// <param name="timeout">The miliseconds to wait for an answer from the service (-1 to wait forever). Default 5 seconds</param>
         /// <returns>A list with the found media</returns>
         ///<exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
-        public static List<Media> Search(string name, MediaType type, int timeout = 5000)
+        public static List<Media> Search(string username, string password, string name, MediaType type, int timeout = 5000)
         {
             List<Media> media = null;
             try
@@ -1578,7 +1673,7 @@ namespace jaMAL
                 media = new List<Media>();
                 IAsyncResult mediaQuery = null;
                 bool finishSearchCallback = false;
-                IAsyncResult res = Service.BeginSearch(name, type,
+                IAsyncResult res = Service.BeginSearch(username, password, name, type,
                     ar =>
                     {
                         mediaQuery = ar;
@@ -1614,11 +1709,13 @@ namespace jaMAL
         /// <summary>
         /// Async search query for anime/manga. The result contains the list of anime/manga entries
         /// </summary>
+        /// <param name="username">The account username</param>
+        /// <param name="password">The account password</param>
         /// <param name="searchName">The name of the anime/manga</param>
         /// <param name="type">If the query is about anime or manga</param>
         /// <param name="resultCallback">The callback to handle the result</param>
         ///<exception cref="jaMal.Exception">Something went wrong with the web request</exception>
-        public static IAsyncResult BeginSearch(string name, MediaType type, AsyncCallback resultCallback)
+        public static IAsyncResult BeginSearch(string username, string password, string name, MediaType type, AsyncCallback resultCallback)
         {
             IAsyncResult res = null;
             try
@@ -1628,17 +1725,17 @@ namespace jaMAL
                 switch (type)
                 {
                     case MediaType.Anime:
-                        webRequestURL = string.Format("http://myanimelist.net/api/anime/search.xml?q={0}", name);
+                        webRequestURL = string.Format(_searchAnimeURL, name);
                         break;
 
                     case MediaType.Manga:
-                        webRequestURL = string.Format("http://myanimelist.net/api/manga/search.xml?q={0}", name);
+                        webRequestURL = string.Format(_searchMangaURL, name);
                         break;
                 }
 
                 HttpWebRequest webRequest = WebRequest.Create(webRequestURL) as HttpWebRequest;
                 webRequest.Method = "GET";
-                webRequest.Credentials = new NetworkCredential(UserAccount.UserName, UserAccount.Password);
+                webRequest.Credentials = new NetworkCredential(username, password);
 
                 _asyncQueryData data = new _asyncQueryData();
                 data.ResultCallback = resultCallback;
@@ -2908,9 +3005,25 @@ namespace jaMAL
 
         #endregion
 
-        public void Dispose()
+        #region Auxilary Methods
+
+        private static void _trySetUserAgent(ref HttpWebRequest httpRequest, string userAgentValue)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(userAgentValue))
+                return;
+
+            try
+            {
+                var userAgent = httpRequest.GetType().GetTypeInfo().DeclaredProperties.FirstOrDefault(e => e.Name.Equals("UserAgent"));
+                if (userAgent != null)
+                {
+                    userAgent.SetValue(httpRequest, userAgentValue, null);
+                }
+            }
+            catch (Exception)
+            { }
         }
+
+        #endregion
     }
 }

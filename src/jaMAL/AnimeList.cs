@@ -278,7 +278,7 @@ namespace jaMAL
                     throw new jaMALException("Cannot test IsSynchronized while synchronizing or refreshing!");
 
                 // get the actual animelist and check if really really is synchronized
-                List<MediaEntry> list = Service.GetUserList(MediaType.Anime, -1);
+                List<MediaEntry> list = Service.GetUserList(AccountOwner.UserName, AccountOwner.Password, MediaType.Anime, -1);
                 Dictionary<uint, AnimeEntry> aux = new Dictionary<uint,AnimeEntry>();
                 foreach (MediaEntry ae in list)
                     aux.Add(ae.Id, ae as AnimeEntry);
@@ -426,11 +426,11 @@ namespace jaMAL
             try
             {
                 _refreshing = true;
-                res = Service.BeginGetUserList(MediaType.Anime,
+                res = Service.BeginGetUserList(AccountOwner.UserName, AccountOwner.Password, MediaType.Anime,
                     result =>
                     {
                         Service.SearchUserAnimeListAsyncResult getlistResult = (Service.SearchUserAnimeListAsyncResult)result;
-                        Debug.Assert(getlistResult.UserName == _accountOwner.UserName && (_accountOwner.UserID != null && _accountOwner.UserID == getlistResult.UserID));
+                        Debug.Assert(getlistResult.UserName == AccountOwner.UserName && (AccountOwner.UserID != null && AccountOwner.UserID == getlistResult.UserID));
                         _refreshWatching = getlistResult.Watching;
                         _refreshCompleted = getlistResult.Completed;
                         _refreshOnHold = getlistResult.OnHold;
@@ -477,7 +477,7 @@ namespace jaMAL
                 string userName;
                 uint userID, watching, completed, onHold, dropped, planToConsume;
                 float daysSpentConsuming;
-                List<MediaEntry> list = Service.GetUserList(MediaType.Anime, out userID, out userName, out watching, out completed, out onHold, out dropped, out planToConsume, out daysSpentConsuming, operationTimeout);
+                List<MediaEntry> list = Service.GetUserList(AccountOwner.UserName, AccountOwner.Password, MediaType.Anime, out userID, out userName, out watching, out completed, out onHold, out dropped, out planToConsume, out daysSpentConsuming, operationTimeout);
                 Debug.Assert(userName == _accountOwner.UserName && (_accountOwner.UserID != null && _accountOwner.UserID == userID), "Obtained anime list user info is different from caller user");
                 _refreshWatching = watching;
                 _refreshCompleted = completed;
@@ -519,7 +519,7 @@ namespace jaMAL
         {
             IAsyncResult res = null;
 
-            res = Service.BeginAdd(entry, MediaType.Anime,
+            res = Service.BeginAdd(AccountOwner.UserName, AccountOwner.Password, entry, MediaType.Anime,
                 result =>
                 {
                     Service.AddUpdateAnimeAsyncResult animAdd = (Service.AddUpdateAnimeAsyncResult)result;
@@ -546,7 +546,7 @@ namespace jaMAL
         {
             bool couldAddUpdate = false;
 
-            couldAddUpdate = Service.Add(entry, MediaType.Anime, operationTimeout);
+            couldAddUpdate = Service.Add(AccountOwner.UserName, AccountOwner.Password, entry, MediaType.Anime, operationTimeout);
 
             if (couldAddUpdate)
             {
@@ -572,7 +572,7 @@ namespace jaMAL
         {
             IAsyncResult res = null;
 
-            res = Service.BeginUpdate(entry, MediaType.Anime,
+            res = Service.BeginUpdate(AccountOwner.UserName, AccountOwner.Password, entry, MediaType.Anime,
                     result =>
                     {
                         Service.AddUpdateAnimeAsyncResult animUpdate = (Service.AddUpdateAnimeAsyncResult)result;
@@ -599,7 +599,7 @@ namespace jaMAL
         {
             bool couldAddUpdate = false;
 
-            couldAddUpdate = Service.Update(entry, MediaType.Anime, operationTimeout);
+            couldAddUpdate = Service.Update(AccountOwner.UserName, AccountOwner.Password, entry, MediaType.Anime, operationTimeout);
 
             if (couldAddUpdate)
             {
@@ -623,7 +623,7 @@ namespace jaMAL
         /// <exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
         private IAsyncResult _beginDeleteAnimeEntry(uint animeId, AsyncCallback resultCallback)
         {
-            IAsyncResult res = Service.BeginDelete(animeId, MediaType.Anime,
+            IAsyncResult res = Service.BeginDelete(AccountOwner.UserName, AccountOwner.Password, animeId, MediaType.Anime,
                 result =>
                 {
                     Service.DeleteAnimeAsyncResult animDelete = (Service.DeleteAnimeAsyncResult)result;
@@ -648,7 +648,7 @@ namespace jaMAL
         /// <exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
         private bool _deleteAnimeEntry(uint animeId, int operationTimeout = 5000)
         {
-            bool couldDelete = Service.Delete(animeId, MediaType.Anime, operationTimeout);
+            bool couldDelete = Service.Delete(AccountOwner.UserName, AccountOwner.Password, animeId, MediaType.Anime, operationTimeout);
             if (couldDelete)
             {
                 //AnimeEntries.Remove(animeId);

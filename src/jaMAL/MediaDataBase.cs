@@ -30,6 +30,15 @@ namespace jaMAL
     /// </summary>
     public class MediaDataBase
     {
+        #region Default User Account
+
+        /// <summary>
+        /// The default account to make searches
+        /// </summary>
+        public static Account UserAccount;
+
+        #endregion
+
         #region Anime Query Methods
 
         /// <summary>
@@ -43,7 +52,7 @@ namespace jaMAL
         {
             MediaDataBase ins = _getInstance();
 
-            IAsyncResult res = Service.BeginSearch(matchName, MediaType.Anime, 
+            IAsyncResult res = Service.BeginSearch(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, matchName, MediaType.Anime, 
                 result =>
                 {
                      Service.SearchAnimeAsyncResult animQuery = (Service.SearchAnimeAsyncResult)result;
@@ -70,7 +79,7 @@ namespace jaMAL
             List<Anime> animeR = null;
             List<Media> mediaR;
 
-            mediaR = Service.Search(matchName, MediaType.Anime);
+            mediaR = Service.Search(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, matchName, MediaType.Anime);
 
             animeR = new List<Anime>(mediaR.Count);
 
@@ -104,7 +113,7 @@ namespace jaMAL
             }
             catch (InvalidOperationException)// if First couldnt find anything
             {
-                IAsyncResult asyncRes = Service.BeginSearch(name, MediaType.Anime,
+                IAsyncResult asyncRes = Service.BeginSearch(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, name, MediaType.Anime,
                     result =>
                     {
                         Service.SearchAnimeAsyncResult animQuery = (Service.SearchAnimeAsyncResult)result;
@@ -168,7 +177,7 @@ namespace jaMAL
         {
             MediaDataBase ins = _getInstance();
 
-            IAsyncResult res = Service.BeginSearch(matchName, MediaType.Manga,
+            IAsyncResult res = Service.BeginSearch(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, matchName, MediaType.Manga,
                 result =>
                 {
                     Service.SearchMangaAsyncResult mangaQuery = (Service.SearchMangaAsyncResult)result;
@@ -195,7 +204,7 @@ namespace jaMAL
             List<Manga> mangaR = null;
             List<Media> mediaR;
 
-            mediaR = Service.Search(matchName, MediaType.Manga);
+            mediaR = Service.Search(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, matchName, MediaType.Manga);
 
             mangaR = new List<Manga>(mediaR.Count);
 
@@ -229,7 +238,7 @@ namespace jaMAL
             }
             catch (InvalidOperationException)// if First couldnt find anything
             {
-                IAsyncResult asyncRes = Service.BeginSearch(name, MediaType.Manga,
+                IAsyncResult asyncRes = Service.BeginSearch(MediaDataBase.UserAccount.UserName, MediaDataBase.UserAccount.Password, name, MediaType.Manga,
                     result =>
                     {
                         Service.SearchMangaAsyncResult mangaQuery = (Service.SearchMangaAsyncResult)result;

@@ -278,7 +278,7 @@ namespace jaMAL
                     throw new jaMALException("Cannot test IsSynchronized while synchronizing or refreshing!");
 
                 // get the actual mangalist and check if really really is synchronized
-                List<MediaEntry> list = Service.GetUserList(MediaType.Manga, -1);
+                List<MediaEntry> list = Service.GetUserList(AccountOwner.UserName, AccountOwner.Password, MediaType.Manga, -1);
                 Dictionary<uint, MangaEntry> aux = new Dictionary<uint, MangaEntry>();
                 foreach (MediaEntry me in list)
                     aux.Add(me.Id, me as MangaEntry);
@@ -426,7 +426,7 @@ namespace jaMAL
             try
             {
                 _refreshing = true;
-                res = Service.BeginGetUserList(MediaType.Manga,
+                res = Service.BeginGetUserList(AccountOwner.UserName, AccountOwner.Password, MediaType.Manga,
                     result =>
                     {
                         Service.SearchUserMangaListAsyncResult getlistResult = (Service.SearchUserMangaListAsyncResult)result;
@@ -477,7 +477,7 @@ namespace jaMAL
                 string userName;
                 uint userID, watching, completed, onHold, dropped, planToConsume;
                 float daysSpentConsuming;
-                List<MediaEntry> list = Service.GetUserList(MediaType.Manga, out userID, out userName, out watching, out completed, out onHold, out dropped, out planToConsume, out daysSpentConsuming, operationTimeout);
+                List<MediaEntry> list = Service.GetUserList(AccountOwner.UserName, AccountOwner.Password, MediaType.Manga, out userID, out userName, out watching, out completed, out onHold, out dropped, out planToConsume, out daysSpentConsuming, operationTimeout);
                 Debug.Assert(userName == _accountOwner.UserName && (_accountOwner.UserID != null && _accountOwner.UserID == userID), "Obtained manga list user info is different from caller user");
                 _refreshWatching = watching;
                 _refreshCompleted = completed;
@@ -519,7 +519,7 @@ namespace jaMAL
         {
             IAsyncResult res = null;
 
-            res = Service.BeginAdd(entry, MediaType.Manga,
+            res = Service.BeginAdd(AccountOwner.UserName, AccountOwner.Password, entry, MediaType.Manga,
                 result =>
                 {
                     Service.AddUpdateMangaAsyncResult mangaAdd = (Service.AddUpdateMangaAsyncResult)result;
@@ -546,7 +546,7 @@ namespace jaMAL
         {
             bool couldAddUpdate = false;
 
-            couldAddUpdate = Service.Add(entry, MediaType.Manga, operationTimeout);
+            couldAddUpdate = Service.Add(AccountOwner.UserName, AccountOwner.Password, entry, MediaType.Manga, operationTimeout);
 
             if (couldAddUpdate)
             {
@@ -572,7 +572,7 @@ namespace jaMAL
         {
             IAsyncResult res = null;
 
-            res = Service.BeginUpdate(entry, MediaType.Manga,
+            res = Service.BeginUpdate(AccountOwner.UserName, AccountOwner.Password, entry, MediaType.Manga,
                     result =>
                     {
                         Service.AddUpdateMangaAsyncResult mangaUpdate = (Service.AddUpdateMangaAsyncResult)result;
@@ -599,7 +599,7 @@ namespace jaMAL
         {
             bool couldAddUpdate = false;
 
-            couldAddUpdate = Service.Update(entry, MediaType.Manga, operationTimeout);
+            couldAddUpdate = Service.Update(AccountOwner.UserName, AccountOwner.Password, entry, MediaType.Manga, operationTimeout);
 
             if (couldAddUpdate)
             {
@@ -623,7 +623,7 @@ namespace jaMAL
         /// <exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
         private IAsyncResult _beginDeleteMangaEntry(uint mangaId, AsyncCallback resultCallback)
         {
-            IAsyncResult res = Service.BeginDelete(mangaId, MediaType.Manga,
+            IAsyncResult res = Service.BeginDelete(AccountOwner.UserName, AccountOwner.Password, mangaId, MediaType.Manga,
                 result =>
                 {
                     Service.DeleteMangaAsyncResult mangaDelete = (Service.DeleteMangaAsyncResult)result;
@@ -648,7 +648,7 @@ namespace jaMAL
         /// <exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
         private bool _deleteMangaEntry(uint mangaId, int operationTimeout = 5000)
         {
-            bool couldDelete = Service.Delete(mangaId, MediaType.Manga, operationTimeout);
+            bool couldDelete = Service.Delete(AccountOwner.UserName, AccountOwner.Password, mangaId, MediaType.Manga, operationTimeout);
             if (couldDelete)
             {
                 //MangaEntries.Remove(mangaId);
