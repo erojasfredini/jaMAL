@@ -19,7 +19,10 @@ You can do everything with asynchronous calls to ensure great responsiveness in 
 
 ### Synchronous
 ```C#
+// if you have been whitelisted and have a user-agent set it
+// Service.UserAgent = "Your user-agent";
 Account user = new Account("username", "password");
+MediaDataBase.UserAccount = user;// the user credentials to make queries
 if( !user.VerifyAccount() )
   throw new Exception("Verification failed :'(");
 
@@ -45,7 +48,10 @@ user.UserAnimeList.SyncAnimeList();
 
 ### Asynchronous
 ```C#
+// if you have been whitelisted and have a user-agent set it
+// Service.UserAgent = "Your user-agent";
 Account user = new Account("jaMALTestAccount", "jaMALTestAccount");
+MediaDataBase.UserAccount = user;// the user credentials to make queries
 if( !user.VerifyAccount() )
     throw new Exception("Verification failed :'(");
 
@@ -94,6 +100,9 @@ user.UserAnimeList.BeginSyncAnimeList(r =>
 Install the [jaMAL NuGet Package](https://www.nuget.org/packages/jaMAL/).
 
 Too lazy for nuget and to build it yourself? Ok, [here](http://1drv.ms/1LoPHyE) you got a direct download. But don't hate me if that isn’t the last version.
+
+## Whitelisting
+With the current MAL security API users may be blacklisted automatically. To prevent this, you need to fill [this](https://atomiconline.wufoo.com/forms/mal-api-usage-notification/) form to become whitelisted. Once you have been whitelisted, you will have a user-agent for your application that you can set in the library as showned in the "Hello World" example.
 
 ## How to build
 To build the project you need:
