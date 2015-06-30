@@ -10,9 +10,10 @@ Just Another MyAnimeList (jaMAL) is a portable C# library for .NET, Windows Phon
 ### Main features
 
 * Work asynchronously or synchronously
-* Automatic cache of querys, anime/manga lists and images
+* Automatic cache of querys (session), anime/manga lists (session) and images (session/persistent)
 * Sync with MyAnimeList when you want
 * Observable interface design
+* User account encryption
 
 ## Hello World
 You can do everything with asynchronous calls to ensure great responsiveness in your application. But if you just don't care about that you can also do everything synchronously, or mixing asynchronous and synchronous calls. Just do it your way :)
@@ -128,6 +129,15 @@ Steps to report a bug:
     * library version
     * steps to reproduce the bug
     * some pseudocode
+
+## Roadmap
+This version (v1.x) will support:
+* Global HTTP request retry management
+* Global HTTP request timeout management
+* Log generation with [Common.Logging](https://www.nuget.org/packages/Common.Logging/)
+
+Next version (v2.x) will:
+* Change the asynchronous model from the currently only callbacks to [async methods](https://msdn.microsoft.com/en-us/library/hh191443.aspx) with finish callbacks. This way the syntax  will be cleaner and easier to use. For this the HTTP request API will be change for [Microsoft HTTP Client Libraries](https://www.nuget.org/packages/Microsoft.Net.Http) or [Microsoft Async](https://www.nuget.org/packages/Microsoft.Bcl.Async/) for *async* requests support.
 
 ## Contact
 
