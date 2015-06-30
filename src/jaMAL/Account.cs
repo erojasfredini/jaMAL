@@ -20,6 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using PCLCrypto;
+using PCLStorage;
 
 namespace jaMAL
 {
@@ -101,6 +104,91 @@ namespace jaMAL
 
         #region Methods
 
+        private static byte[] _deriveKey(string encryptionKey)
+        {
+            byte[] salt; // best initialized to a unique value for each user, and stored with the user record
+            salt = new byte[8];
+            for (int i = 0; i < 8; ++i)
+                salt[i] = 0;
+            int iterations = 5000; // higher makes brute force attacks more expensive
+            int keyLengthInBytes = 16;
+            byte[] key = NetFxCrypto.DeriveBytes.GetBytes(encryptionKey, salt, iterations, keyLengthInBytes);
+            return key;
+        }
+
+        private static void _initCrypto(string encryptionKey, out ICryptographicKey key, out byte[] iv)
+        {
+            byte[] keyMaterial = _deriveKey(encryptionKey);
+            var provider = WinRTCrypto.SymmetricKeyAlgorithmProvider.OpenAlgorithm(SymmetricAlgorithm.AesCbcPkcs7);
+            key = provider.CreateSymmetricKey(keyMaterial);
+            iv = null; // this is optional, but must be the same for both encrypting and decrypting
+        }
+
+        public static async Task<IList<Account>> LoadCredentials(string encryptionKey)
+        {
+            IFolder rootFolder = FileSystem.Current.LocalStorage;
+
+            Task<IFolder> tFolder = rootFolder.CreateFolderAsync("userCredentials", CreationCollisionOption.OpenIfExists);
+            tFolder.Wait();
+            IFolder folder = tFolder.Result;
+
+            IList<IFile> files = await folder.GetFilesAsync();
+
+            List<Account> accounts = new List<Account>();
+            foreach(IFile f in files)
+            {
+                System.IO.Stream stream = await f.OpenAsync(FileAccess.ReadAndWrite);
+                using (stream)
+                {
+                    byte[] aux = new byte[256];
+                    int read = stream.Read(aux, 0, 256);
+                    byte[] cipherText = new byte[read];
+                    for (int i = 0; i < read; ++i)
+                        cipherText[i] = aux[i];
+
+                    byte[] iv;
+                    ICryptographicKey key;
+                    _initCrypto(encryptionKey, out key, out iv);
+                    byte[] plainText = WinRTCrypto.CryptographicEngine.Decrypt(key, cipherText, iv);
+                    string readText = Encoding.UTF8.GetString(plainText, 0, plainText.Length);
+                    string[] accountData = readText.Split(' ');
+                    accounts.Add(new Account(accountData[0], accountData[1]));
+                }
+            }
+
+            return accounts;
+        }
+
+        public async void SaveCredentials(string encryptionKey)
+        {
+            IFolder rootFolder = FileSystem.Current.LocalStorage;
+
+            Task<IFolder> tFolder = rootFolder.CreateFolderAsync("userCredentials", CreationCollisionOption.OpenIfExists);
+            tFolder.Wait();
+            IFolder folder = tFolder.Result;
+
+            string name = _userName+".acc";
+
+            IFile file = await folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
+
+            byte[] iv;
+            ICryptographicKey key;
+            _initCrypto(encryptionKey, out key, out iv);
+            string contentText = _userName + " " + _password;
+            byte[] data = Encoding.UTF8.GetBytes(contentText);
+            
+            byte[] cipherText = WinRTCrypto.CryptographicEngine.Encrypt(key, data, iv);
+
+            byte[] plainText = WinRTCrypto.CryptographicEngine.Decrypt(key, cipherText, iv);
+            string readText = Encoding.UTF8.GetString(plainText, 0, plainText.Length);
+
+            System.IO.Stream stream = await file.OpenAsync(FileAccess.ReadAndWrite);
+            using (stream)
+            {
+                stream.Write(cipherText, 0, cipherText.Length);
+            }
+        }
+
         /// <summary>
         /// Account constructor
         /// </summary>
@@ -157,7 +245,5 @@ namespace jaMAL
         
 
         #endregion
-
-        
     }
 }

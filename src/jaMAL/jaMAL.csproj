@@ -56,6 +56,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="PCLCrypto">
+      <HintPath>..\..\packages\PCLCrypto.1.0.2.15130\lib\portable-net40+sl50+win+wpa81+wp80+MonoAndroid10+xamarinios10+MonoTouch10\PCLCrypto.dll</HintPath>
+    </Reference>
     <Reference Include="PCLStorage">
       <HintPath>..\..\packages\PCLStorage.1.0.2\lib\portable-net45+sl5+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac\PCLStorage.dll</HintPath>
     </Reference>

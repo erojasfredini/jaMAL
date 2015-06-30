@@ -32,13 +32,15 @@ namespace TestBench
 {
     class Program
     {
-        static bool TestAnimeList()
+        static async void TestAnimeList()
         {
             Account user = null;
             try
             {
                 //Service.UserAgent = "jaMAL";
-                user = new Account("jaMALTestAccount", "jaMALTestAccount");
+                //user = new Account("jaMALTestAccount", "jaMALTestAccount");
+                IList<Account> accounts = await Account.LoadCredentials("jaMAL");
+                user = accounts[0];
                 MediaDataBase.UserAccount = user;
 
                 Console.WriteLine("Verifying account...");
@@ -47,9 +49,13 @@ namespace TestBench
                 else
                     Console.WriteLine("Verification failed :(");
 
+                user.SaveCredentials("jaMAL");
+
                 user.UserAnimeList.RefreshList();
                 Debug.Assert(user.UserAnimeList.SeemsSynchronized && user.UserAnimeList.IsSynchronized, "AnimeList: List not sync after first RefreshList");
 
+                foreach(Account account in accounts)
+                    Console.WriteLine(account.ToString());
                 Console.WriteLine(user.ToString());
 
                 Console.ReadKey();
@@ -115,10 +121,9 @@ namespace TestBench
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return false;
             }
-            
-            return true;
+
+            user.SaveCredentials("jaMAL");
         }
 
         static void Main(string[] args)
@@ -134,8 +139,7 @@ namespace TestBench
             WebRequest.DefaultWebProxy = proxyObject;
             */
 
-            bool success = false;
-            success = TestAnimeList();
+            TestAnimeList();
             Console.ReadKey();
 
             ObservableConcurrentDictionary<uint,string> od = new ObservableConcurrentDictionary<uint,string>();
