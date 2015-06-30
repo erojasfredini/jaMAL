@@ -137,7 +137,7 @@ This version (v1.x) will support:
 * Log generation with [Common.Logging](https://www.nuget.org/packages/Common.Logging/)
 
 Next version (v2.x) will:
-* Change the asynchronous model from the currently only callbacks to [async methods](https://msdn.microsoft.com/en-us/library/hh191443.aspx) with finish callbacks. This way the syntax  will be cleaner and easier to use. For this the HTTP request API will be change for [Microsoft HTTP Client Libraries](https://www.nuget.org/packages/Microsoft.Net.Http) or [Microsoft Async](https://www.nuget.org/packages/Microsoft.Bcl.Async/) for *async* requests support.
+* Change the asynchronous model from the currently only callbacks to [async methods](https://msdn.microsoft.com/en-us/library/hh191443.aspx) with finish callbacks. This way the syntax  will be cleaner and easier to use. For this the HTTP request API will be change for [Microsoft HTTP Client Libraries](https://www.nuget.org/packages/Microsoft.Net.Http) or [Microsoft Async](https://www.nuget.org/packages/Microsoft.Bcl.Async/) for *async* requests support
 
 ## Contact
 
