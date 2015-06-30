@@ -18,6 +18,8 @@ Just Another MyAnimeList (jaMAL) is a portable C# library for .NET, Windows Phon
 ## Hello World
 You can do everything with asynchronous calls to ensure great responsiveness in your application. But if you just don't care about that you can also do everything synchronously, or mixing asynchronous and synchronous calls. Just do it your way :)
 
+You can see a few tutorials in the project [wiki](https://github.com/bobxiv/jaMAL/wiki).
+
 ### Synchronous
 ```C#
 // if you have been whitelisted and have a user-agent set it
