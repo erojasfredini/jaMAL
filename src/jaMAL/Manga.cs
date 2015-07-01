@@ -23,6 +23,9 @@ using System.Text;
 
 namespace jaMAL
 {
+    /// <summary>
+    /// Manga information
+    /// </summary>
     public class Manga : Media
     {
         #region Properties

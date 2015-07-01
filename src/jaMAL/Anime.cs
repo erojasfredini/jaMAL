@@ -23,6 +23,9 @@ using System.Text;
 
 namespace jaMAL
 {
+    /// <summary>
+    /// Anime information
+    /// </summary>
     public class Anime : Media
     {
         #region Properties

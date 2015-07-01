@@ -24,6 +24,9 @@ using System.Threading.Tasks;
 
 namespace jaMAL
 {
+    /// <summary>
+    /// Manga brief information. Manga class contains all this brief information and more, but this is necesary because when an anime or manga list is downloaded not all the anime/manga is given for the entries
+    /// </summary>
     public class MangaBrief: MediaBrief
     {
         #region Properties

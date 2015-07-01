@@ -6,8 +6,8 @@
     <ProjectGuid>{4F57EF2F-C54A-4D7E-B56B-258EBD8DF67C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>jaMAL_APITest</RootNamespace>
-    <AssemblyName>jaMAL-APITest</AssemblyName>
+    <RootNamespace>jaMAL.Test</RootNamespace>
+    <AssemblyName>jaMAL.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -53,6 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="GlobalTest.cs" />
     <Compile Include="ServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

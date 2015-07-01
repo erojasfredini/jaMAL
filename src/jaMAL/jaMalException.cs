@@ -23,6 +23,9 @@ using System.Text;
 
 namespace jaMAL
 {
+    /// <summary>
+    /// General exception of jaMAL
+    /// </summary>
     class jaMALException : Exception
     {
         public jaMALException()

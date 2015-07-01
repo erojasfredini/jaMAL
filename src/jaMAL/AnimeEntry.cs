@@ -25,6 +25,9 @@ using System.Diagnostics;
 
 namespace jaMAL
 {
+    /// <summary>
+    /// Entry of a anime list
+    /// </summary>
     public class AnimeEntry : MediaEntry
     {
         #region Properties

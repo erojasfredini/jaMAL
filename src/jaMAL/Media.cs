@@ -28,6 +28,9 @@ using System.Threading;
 
 namespace jaMAL
 {
+    /// <summary>
+    /// Media is the generalization of an anime or manga
+    /// </summary>
     public class Media : INotifyPropertyChanged
     {
         #region Properties

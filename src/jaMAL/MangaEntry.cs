@@ -24,6 +24,9 @@ using System.ComponentModel;
 
 namespace jaMAL
 {
+    /// <summary>
+    /// Entry of a manga list
+    /// </summary>
     public class MangaEntry : MediaEntry
     {
         #region Properties

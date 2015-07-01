@@ -27,7 +27,7 @@ using PCLStorage;
 namespace jaMAL
 {
     /// <summary>
-    /// Represents an user
+    /// Account represents an user. Maintains the anime and manga list of the given user
     /// </summary>
     public class Account
     {

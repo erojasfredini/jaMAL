@@ -24,6 +24,9 @@ using System.ComponentModel;
 
 namespace jaMAL
 {
+    /// <summary>
+    /// MediaEntry is the generalization of an anime entry or manga entry
+    /// </summary>
     public abstract class MediaEntry : INotifyPropertyChanged
     {
         #region Properties

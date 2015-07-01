@@ -7,8 +7,8 @@
     <ProjectGuid>{5BBB41AF-397D-4032-8EAB-E187317660B4}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>jaMAL_APITestBench</RootNamespace>
-    <AssemblyName>jaMAL-APITestBench</AssemblyName>
+    <RootNamespace>TestBench</RootNamespace>
+    <AssemblyName>TestBench</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

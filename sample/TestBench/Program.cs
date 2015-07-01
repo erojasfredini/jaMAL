@@ -37,6 +37,10 @@ namespace TestBench
             Account user = null;
             try
             {
+                await ImageDataBase.LoadCache();
+                //await ImageDataBase.ClearCache();
+                await ImageDataBase.SaveCache();
+
                 //Service.UserAgent = "jaMAL";
                 //user = new Account("jaMALTestAccount", "jaMALTestAccount");
                 IList<Account> accounts = await Account.LoadCredentials("jaMAL");
@@ -115,7 +119,7 @@ namespace TestBench
                 Console.WriteLine("Finish Downloading");
 
                 Console.WriteLine("Start Saving Images Cache");
-                ImageDataBase.SaveCache();
+                await ImageDataBase.SaveCache();
                 Console.WriteLine("Finish Saving");
             }
             catch (Exception e)

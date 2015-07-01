@@ -45,9 +45,11 @@ namespace jaMAL
             ImageDataBase ins = _getInstance();
             IAsyncResult asyncRes = null;
 
-            if( ins._imageCache.ContainsKey(media.LogoImageURI) )
-            { 
-                resultCallback(new Service.DownloadingImageAsyncResult(media, ins._imageCache[media.LogoImageURI]));
+            int hash = media.LogoImageURI.GetHashCode();
+
+            if (ins._imageCache.ContainsKey(hash))
+            {
+                resultCallback(new Service.DownloadingImageAsyncResult(media, ins._imageCache[hash]));
                 
             }else
             {
@@ -55,8 +57,8 @@ namespace jaMAL
                     result =>
                     {
                         Service.DownloadingImageAsyncResult downloadResult = (Service.DownloadingImageAsyncResult)result;
-                        if (ins._imageCache.TryAdd(media.LogoImageURI, downloadResult.LogoImage))
-                            ins._imageCache[media.LogoImageURI] = downloadResult.LogoImage;
+                        if (ins._imageCache.TryAdd(hash, downloadResult.LogoImage))
+                            ins._imageCache[hash] = downloadResult.LogoImage;
                         if (resultCallback != null)
                             resultCallback(downloadResult);
                     });
@@ -95,37 +97,109 @@ namespace jaMAL
 
         #endregion
 
+        #region Save/Load/Clear Cache
+
         /// <summary>
-        /// Saves the images of the cache to a file
+        /// Clear the stored cache
         /// </summary>
-        /// <returns>True if could save or false otherwise</returns>
-        /// <exception cref="jaMal.jaMALException">Something went wrong with the web request</exception>
-        public async static void SaveCache()
+        /// <param name="onFinishCallback">The callback to execute at the end of the process</param>
+        /// <returns>True if succeeded or false otherwise</returns>
+        /// <exception cref="jaMal.jaMALException">Something went wrong</exception>
+        public async static Task<bool> ClearCache(AsyncCallback onFinishCallback = null)
         {
             IFolder rootFolder = FileSystem.Current.LocalStorage;
 
-            Task<IFolder> tFolder = rootFolder.CreateFolderAsync("ImageCache", CreationCollisionOption.OpenIfExists);
+            Task<IFolder> tFolder = rootFolder.CreateFolderAsync("imageCache", CreationCollisionOption.OpenIfExists);
+            tFolder.Wait();
+            IFolder folder = tFolder.Result;
+
+            IList<IFile> files = await folder.GetFilesAsync();
+
+            ImageDataBase ins = _getInstance();
+            ins._imageCache.Clear();
+            List<Task> tasks = new List<Task>();
+            foreach (IFile f in files)
+            {
+                tasks.Add(f.DeleteAsync());
+            }
+            foreach (Task t in tasks)
+                await t;
+            if( onFinishCallback != null )
+                onFinishCallback(null);
+            return true;
+        }
+
+        /// <summary>
+        /// Load the stored images to the cache
+        /// </summary>
+        /// <param name="onFinishCallback">The callback to execute at the end of the process</param>
+        /// <returns>True if succeeded or false otherwise</returns>
+        /// <exception cref="jaMal.jaMALException">Something went wrong</exception>
+        public async static Task<bool> LoadCache(AsyncCallback onFinishCallback = null)
+        {
+            IFolder rootFolder = FileSystem.Current.LocalStorage;
+
+            Task<IFolder> tFolder = rootFolder.CreateFolderAsync("imageCache", CreationCollisionOption.OpenIfExists);
+            tFolder.Wait();
+            IFolder folder = tFolder.Result;
+
+            IList<IFile> files = await folder.GetFilesAsync();
+
+            ImageDataBase ins = _getInstance();
+            foreach (IFile f in files)
+            {
+                System.IO.Stream stream = await f.OpenAsync(FileAccess.ReadAndWrite);
+                using (stream)
+                {
+                    byte[] aux = new byte[stream.Length];
+                    int read = stream.Read(aux, 0, aux.Length);
+                    string hashString = f.Name.Substring(0, f.Name.LastIndexOf('.'));
+                    int hash;
+                    if( int.TryParse(hashString, out hash) )// there could be thing other than our files... like Thumb file :/
+                    {
+                        if (ins._imageCache.TryAdd(hash, aux))
+                            ins._imageCache[hash] = aux;
+                    }
+                }
+            }
+            if (onFinishCallback != null)
+                onFinishCallback(null);
+            return true;
+        }
+
+        /// <summary>
+        /// Save the images of the cache to a file
+        /// </summary>
+        /// <param name="onFinishCallback">The callback to execute at the end of the process</param>
+        /// <returns>True if succeeded or false otherwise</returns>
+        /// <exception cref="jaMal.jaMALException">Something went wrong</exception>
+        public async static Task<bool> SaveCache(AsyncCallback onFinishCallback = null)
+        {
+            IFolder rootFolder = FileSystem.Current.LocalStorage;
+
+            Task<IFolder> tFolder = rootFolder.CreateFolderAsync("imageCache", CreationCollisionOption.OpenIfExists);
             tFolder.Wait();
             IFolder folder = tFolder.Result;
 
             ImageDataBase ins = _getInstance();
-            foreach (string fileName in ins._imageCache.Keys)
+            foreach (int fileHash in ins._imageCache.Keys)
             {
-                int lastSlash = fileName.LastIndexOf('/');
-                string name = fileName.Substring(lastSlash + 1, fileName.Length - (lastSlash+1));
-                IFile file = await folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
-                //tFile.Wait();
-                //IFile file = tFile.Result;
+                string fileName = fileHash.ToString()+".jpg";
+                IFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                
                 System.IO.Stream stream = await file.OpenAsync(FileAccess.ReadAndWrite);
-                //tStream.Wait();
-                //System.IO.Stream stream = tStream.Result;
 
                 using (stream)
                 {
-                    stream.Write(ins._imageCache[fileName], 0, ins._imageCache[fileName].Length);
+                    stream.Write(ins._imageCache[fileHash], 0, ins._imageCache[fileHash].Length);
                 }
             }
+            if (onFinishCallback != null)
+                onFinishCallback(null);
+            return true;
         }
+
+        #endregion
 
         #region Internal Singleton
 
@@ -150,7 +224,7 @@ namespace jaMAL
         /// </summary>
         private ImageDataBase()
         {
-            _imageCache = new ConcurrentDictionary<string, byte[]>();
+            _imageCache = new ConcurrentDictionary<int, byte[]>();
         }
 
         #endregion
@@ -158,9 +232,9 @@ namespace jaMAL
         #region Internal Properties
 
         /// <summary>
-        /// The images that have been cached by their URI
+        /// The images that have been cached by their URI hash
         /// </summary>
-        private ConcurrentDictionary<string, byte[]> _imageCache;
+        private ConcurrentDictionary<int, byte[]> _imageCache;
 
         #endregion
     }

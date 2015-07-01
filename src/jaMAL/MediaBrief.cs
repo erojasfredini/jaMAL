@@ -25,6 +25,9 @@ using System.Threading.Tasks;
 
 namespace jaMAL
 {
+    /// <summary>
+    /// MediBrief is the generalization of an anime brief or manga brief
+    /// </summary>
     public class MediaBrief : INotifyPropertyChanged
     {
         #region Properties

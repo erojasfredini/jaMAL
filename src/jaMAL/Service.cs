@@ -30,7 +30,7 @@ using System.Reflection;
 namespace jaMAL
 {
     /// <summary>
-    /// Class for accessing myanimelist.net. Methods are thread-safe. Properties are not.
+    /// Static class for low level access to MyAnimeList.net
     /// </summary>
     public static class Service
     {
